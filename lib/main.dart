@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_flutter/ui/product_form.dart';
+import 'package:tugas_flutter/ui/product_page.dart';
 
 void main() {
-  const helloWorld = MaterialApp(home: ProductForm());
+  const helloWorld = MaterialApp(home: ProductPage());
 
   runApp(helloWorld);
 }
