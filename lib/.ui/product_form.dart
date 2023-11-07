@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tugas_flutter/ui/product_detail.dart';
+import 'package:tugas_flutter/.ui/product_detail.dart';
 
 class ProductForm extends StatefulWidget {
   const ProductForm({Key? key}) : super(key: key);

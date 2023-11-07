@@ -1,177 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:tugas_flutter/ui/product_form.dart';
+import 'package:tugas_flutter/helpers/user_info.dart';
+import 'package:tugas_flutter/ui/loginview.dart';
+import 'package:tugas_flutter/ui/produkviewlist.dart';
 
 void main() {
-  const helloWorld = MaterialApp(home: ProductForm());
-
-  runApp(helloWorld);
+  runApp(const MyApp());
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-
-  const MyHomePage({super.key, required this.title});
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        // vertical centered
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: const Center(
-          child: MyForm(),
-        ));
-  }
+  // ignore: library_private_types_in_public_api
+  _MyAppState createState() => _MyAppState();
 }
 
-// Hello World
-class HelloWorld extends StatelessWidget {
-  const HelloWorld({super.key});
+class _MyAppState extends State<MyApp> {
+  Widget page = const CircularProgressIndicator();
 
   @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'Hello Dunia',
-    );
-  }
-}
-
-// Row widget
-class RowWidget extends StatelessWidget {
-  const RowWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ImageWidget(),
-        ImageWidget(),
-      ],
-    );
-  }
-}
-
-// Column widget
-class ColumnWidget extends StatelessWidget {
-  const ColumnWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ImageWidget(),
-        ImageWidget(),
-        ImageWidget(),
-      ],
-    );
-  }
-}
-
-// Image widget
-class ImageWidget extends StatelessWidget {
-  const ImageWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Image(
-      image: NetworkImage('https://picsum.photos/250?image=9'),
-      width: 100,
-      height: 100,
-    );
-  }
-}
-
-// example of stateless widget
-class MyStatelessWidget extends StatelessWidget {
-  const MyStatelessWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('I am a stateless widget');
-  }
-}
-
-// example of stateful widget
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Text('I am a stateful widget');
-  }
-}
-
-// example of creating a form in flutter that input a name and display it using alert dialog
-class MyForm extends StatefulWidget {
-  const MyForm({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _MyFormState();
-}
-
-class _MyFormState extends State<MyForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    isLogin();
   }
 
-  void _showDialog() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Welcome to Flutter, ${_nameController.text}!'),
-          );
-        });
+  void isLogin() async {
+    var token = await UserInfo().getToken();
+    if (token != null) {
+      setState(() {
+        page = const ProdukViewList();
+        //page = ProdukView();
+        //page = const LoginView();
+      });
+    } else {
+      setState(() {
+        page = const LoginView();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      // add padding
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your name',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _showDialog();
-                  }
-                },
-                child: const Text('Submit'),
-              ),
-            ]),
-      ),
+    return MaterialApp(
+      title: 'Toko UMB',
+      debugShowCheckedModeBanner: false,
+      home: page,
+      /* routes: {
+        "/": (BuildContext context) => const LoginView(),
+        "/login": (BuildContext context) => const LoginView(),
+        "/register": (BuildContext context) =>const RegistrasiView(),        
+        "/home": (BuildContext context) => ProdukView(),
+      }, */
     );
   }
 }
