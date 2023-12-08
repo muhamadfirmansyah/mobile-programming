@@ -21,9 +21,9 @@ class ProdukBloc {
     String apiUrl = ApiUrl.createProduk;
 
     var body = {
-      "kode_produk": produk!.kodeproduk,
-      "nama_produk": produk.namaproduk,
-      "harga": produk.hargaproduk.toString()
+      "kodeproduk": produk!.kodeproduk,
+      "namaproduk": produk.namaproduk,
+      "hargaproduk": produk.hargaproduk.toString()
     };
 
     var response = await Api().post(apiUrl, body);
@@ -35,21 +35,22 @@ class ProdukBloc {
     String apiUrl = ApiUrl.updateProduk(produk.id!);
 
     var body = {
-      "kode_produk": produk.kodeproduk,
-      "nama_produk": produk.namaproduk,
-      "harga": produk.hargaproduk.toString()
+      "kodeproduk": produk.kodeproduk,
+      "namaproduk": produk.namaproduk,
+      "hargaproduk": produk.hargaproduk.toString()
     };
     // ignore: avoid_print
     print("Body : $body");
     var response = await Api().post(apiUrl, body);
     var jsonObj = json.decode(response.body);
-    return jsonObj['data'];
+    return jsonObj['status'];
   }
 
   static Future<bool> deleteProduk({int? id}) async {
     String apiUrl = ApiUrl.deleteProduk(id!);
+    Uri url = Uri.parse(apiUrl);
 
-    var response = await Api().delete(apiUrl);
+    var response = await Api().delete(url);
     var jsonObj = json.decode(response.body);
     return (jsonObj as Map<String, dynamic>)['data'];
   }

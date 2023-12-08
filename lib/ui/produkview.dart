@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_flutter/bloc/produk_bloc.dart';
 import 'package:tugas_flutter/model/produkmodel.dart';
+import 'package:tugas_flutter/ui/produkviewlist.dart';
+import 'package:tugas_flutter/widget/warning_dialog.dart';
 
 // ignore: must_be_immutable
 class ProdukView extends StatefulWidget {
@@ -121,6 +124,69 @@ class _ProdukViewState extends State<ProdukView> {
         onPressed: () {
           // ignore: unused_local_variable
           var validate = _formKey.currentState!.validate();
+
+          if (validate) {
+            if (widget.produk != null) {
+              ubah();
+            } else {
+              simpan();
+            }
+          }
         });
+  }
+
+  simpan() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    ProdukModel newProduk = ProdukModel(id: null);
+    newProduk.kodeproduk = _kodeProdukTextboxController.text;
+    newProduk.namaproduk = _namaProdukTextboxController.text;
+    newProduk.hargaproduk = int.parse(_hargaProdukTextboxController.text);
+
+    ProdukBloc.addProduk(produk: newProduk).then((value) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => const ProdukViewList()));
+    }, onError: (error) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => const WarningDialog(
+                description: "Permintaan simpan data gagal, silahkan coba lagi",
+              ));
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  ubah() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    ProdukModel updateProduk = ProdukModel(id: null);
+    updateProduk.id = widget.produk!.id;
+    updateProduk.kodeproduk = _kodeProdukTextboxController.text;
+    updateProduk.namaproduk = _namaProdukTextboxController.text;
+    updateProduk.hargaproduk = int.parse(_hargaProdukTextboxController.text);
+
+    ProdukBloc.updateProduk(produk: updateProduk).then((value) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => const ProdukViewList()));
+    }, onError: (error) {
+      // ignore: avoid_print
+      print(error);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => const WarningDialog(
+                description: "Permintaan ubah data gagal, silahkan coba lagi",
+              ));
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

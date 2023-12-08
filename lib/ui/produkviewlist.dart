@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_flutter/bloc/logout_bloc.dart';
 import 'package:tugas_flutter/bloc/produk_bloc.dart';
 import 'package:tugas_flutter/model/produkmodel.dart';
 import 'package:tugas_flutter/ui/ProdukDetailView.dart';
+import 'package:tugas_flutter/ui/loginview.dart';
 import 'package:tugas_flutter/ui/produkview.dart';
 
 class ProdukViewList extends StatefulWidget {
@@ -36,7 +38,16 @@ class _ProdukViewListState extends State<ProdukViewList> {
             ListTile(
               title: const Text('Logout'),
               trailing: const Icon(Icons.logout),
-              onTap: () async {},
+              onTap: () async {
+                await LogoutBloc.logout().then(
+                  (value) => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginView(),
+                    ),
+                  ),
+                );
+              },
             )
           ],
         ),
