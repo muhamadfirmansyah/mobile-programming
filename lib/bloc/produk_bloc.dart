@@ -6,7 +6,8 @@ import 'package:tugas_flutter/model/produkmodel.dart';
 class ProdukBloc {
   static Future<List<ProdukModel>> getProduks() async {
     String apiUrl = ApiUrl.listProduk;
-    var response = await Api().get(apiUrl);
+    Uri url = Uri.parse(apiUrl);
+    var response = await Api().get(url);
     var jsonObj = json.decode(response.body);
     List<dynamic> listProduk = (jsonObj as Map<String, dynamic>)['data'];
     List<ProdukModel> produks = [];
