@@ -34,10 +34,66 @@ class _ProdukViewListState extends State<ProdukViewList> {
       ),
       drawer: Drawer(
         child: ListView(
+          // children: [
+          //   ListTile(
+          //     title: const Text('Logout'),
+          //     trailing: const Icon(Icons.logout),
+          //     onTap: () async {
+          //       await LogoutBloc.logout().then(
+          //         (value) => Navigator.pushReplacement(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => const LoginView(),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   )
+          // ],
           children: [
+            const UserAccountsDrawerHeader(
+              //membuat gambar profil
+              currentAccountPicture: Image(image: AssetImage("profile.png")),
+              //membuat nama akun
+              accountName: Text("Sahretech"),
+              //membuat nama email
+              accountEmail: Text("User: "),
+              //memberikan background
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("universitas-mercu-buana-logo.jpg"),
+                      fit: BoxFit.cover)),
+            ),
+            //membuat list menu
             ListTile(
-              title: const Text('Logout'),
-              trailing: const Icon(Icons.logout),
+              leading: const Icon(Icons.home),
+              title: const Text("Beranda"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text("Pegawai"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.money),
+              title: const Text("Transaksi"),
+              onTap: () {},
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.emoji_emotions),
+              title: const Text("Profil"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text("Tentang"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
               onTap: () async {
                 await LogoutBloc.logout().then(
                   (value) => Navigator.pushReplacement(
@@ -48,7 +104,7 @@ class _ProdukViewListState extends State<ProdukViewList> {
                   ),
                 );
               },
-            )
+            ),
           ],
         ),
       ),
