@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_flutter/bloc/logout_bloc.dart';
+import 'package:tugas_flutter/bloc/produk_bloc.dart';
 import 'package:tugas_flutter/model/produkmodel.dart';
 import 'package:tugas_flutter/ui/ProdukDetailView.dart';
+import 'package:tugas_flutter/ui/loginview.dart';
 import 'package:tugas_flutter/ui/produkview.dart';
 
 class ProdukViewList extends StatefulWidget {
@@ -15,53 +18,134 @@ class _ProdukViewListState extends State<ProdukViewList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('List Produk'),
-          actions: [
-            Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  child: const Icon(Icons.add, size: 26.0),
-                  onTap: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProdukView()));
-                  },
-                ))
-          ],
-        ),
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              ListTile(
-                title: const Text('Logout'),
-                trailing: const Icon(Icons.logout),
-                onTap: () async {},
-              )
-            ],
-          ),
-        ),
-        body: ListView(
+      appBar: AppBar(
+        title: const Text('List Produk'),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                child: const Icon(Icons.add, size: 26.0),
+                onTap: () async {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProdukView()));
+                },
+              ))
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // children: [
+          //   ListTile(
+          //     title: const Text('Logout'),
+          //     trailing: const Icon(Icons.logout),
+          //     onTap: () async {
+          //       await LogoutBloc.logout().then(
+          //         (value) => Navigator.pushReplacement(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => const LoginView(),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   )
+          // ],
           children: [
-            ItemProduk(
-                produk: ProdukModel(
-                    id: 1,
-                    kodeproduk: 'A001',
-                    namaproduk: 'Kamera',
-                    hargaproduk: 5000000)),
-            ItemProduk(
-                produk: ProdukModel(
-                    id: 2,
-                    kodeproduk: 'A002',
-                    namaproduk: 'Kulkas',
-                    hargaproduk: 2500000)),
-            ItemProduk(
-                produk: ProdukModel(
-                    id: 3,
-                    kodeproduk: 'A003',
-                    namaproduk: 'Mesin Cuci',
-                    hargaproduk: 2000000)),
+            const UserAccountsDrawerHeader(
+              //membuat gambar profil
+              currentAccountPicture: Image(image: AssetImage("profile.png")),
+              //membuat nama akun
+              accountName: Text("Sahretech"),
+              //membuat nama email
+              accountEmail: Text("User: "),
+              //memberikan background
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("universitas-mercu-buana-logo.jpg"),
+                      fit: BoxFit.cover)),
+            ),
+            //membuat list menu
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text("Beranda"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text("Pegawai"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.money),
+              title: const Text("Transaksi"),
+              onTap: () {},
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.emoji_emotions),
+              title: const Text("Profil"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text("Tentang"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
+              onTap: () async {
+                await LogoutBloc.logout().then(
+                  (value) => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginView(),
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
-        ));
+        ),
+      ),
+      body: FutureBuilder<List>(
+        future: ProdukBloc.getProduks(),
+        builder: (context, snapshot) {
+          // ignore: avoid_print
+          if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            return const Center(
+              child: Text('Error Connection'),
+            );
+          }
+
+          return snapshot.hasData
+              ? ListProduk(
+                  list: snapshot.data,
+                )
+              : const Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
+    );
+  }
+}
+
+class ListProduk extends StatelessWidget {
+  final List? list;
+
+  const ListProduk({Key? key, this.list}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: list == null ? 0 : list!.length,
+        itemBuilder: (context, i) {
+          return ItemProduk(
+            produk: list![i],
+          );
+        });
   }
 }
 

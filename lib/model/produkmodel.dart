@@ -6,12 +6,11 @@ class ProdukModel {
 
   ProdukModel({this.id, this.kodeproduk, this.namaproduk, this.hargaproduk});
 
-  factory ProdukModel.fromJson(Map<String, dynamic> json) {
+  factory ProdukModel.fromJson(Map<String, dynamic> obj) {
     return ProdukModel(
-      id: json['id'],
-      kodeproduk: json['kodeproduk'],
-      namaproduk: json['namaproduk'],
-      hargaproduk: json['hargaproduk'],
-    );
+        id: int.parse(obj['id']),
+        kodeproduk: obj['kodeproduk'],
+        namaproduk: obj['namaproduk'],
+        hargaproduk: int.parse(obj['hargaproduk']));
   }
 }
